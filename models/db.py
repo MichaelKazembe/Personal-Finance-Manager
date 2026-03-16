@@ -1,4 +1,5 @@
 from config.firebase_config import db
+from datetime import datetime
 
 # Test connection
 def test_connection():
@@ -8,8 +9,10 @@ def test_connection():
         doc = doc_ref.set({
             'amount': 100,
             'category': 'Groceries',
-            'date': '2024-06-01'
+            'date': datetime.now()
         })
         print("Connection successful, document created.")
     except Exception as e:  
         print("Connection failed:", e)
+        
+        
