@@ -1,5 +1,4 @@
 from config.firebase_config import db
-from services.db import *
 from services.transaction_service import *
 
 # Example transactions with valid ISO dates or defaults
