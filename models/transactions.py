@@ -12,17 +12,28 @@ from datetime import datetime
 
 # Transaction Model
 class Transaction:
-    def __init__(self, amount, category, date=None, description=None):
+    '''
+    Model for representing a financial transaction in the application.
+    
+    Attributes:
+        document_id (str): Unique identifier for the transaction document in Firestore.
+        amount (float): Amount of the transaction.
+        category (str): Category of the transaction (e.g., "Groceries", "Transport").
+        date (datetime): Date and time of the transaction.
+        description (str): Optional description of the transaction.
+    ''' 
+    def __init__(self, transaction_id, amount, category, date=None, description=None):
+        self.document_id = transaction_id
         self.amount = amount
         self.category = category
         self.date = date if date else datetime.now()
         self.description = description
 
     def to_dict(self):
+        # Convert the Transaction instance to a dictionary for Firestore storage
         return {
             'amount': self.amount,
             'category': self.category,
             'date': self.date,
             'description': self.description
-        }
-
+        }       

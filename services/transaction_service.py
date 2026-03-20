@@ -2,10 +2,11 @@ from config.firebase_config import db
 from models.transactions import Transaction
 
 #  Add Transaction
-def add_transaction(amount, category, date=None, description=None):
+def add_transaction(transaction_id, amount, category, date=None, description=None):
     '''
     Function to add a new transaction to the Firestore database.
     
+    :param transaction_id: ID of the transaction
     :param amount: amount of the transaction
     :param category: category of the transaction
     :param date: date of the transaction
@@ -13,40 +14,43 @@ def add_transaction(amount, category, date=None, description=None):
     '''
     
     # Create a Transaction instance
-    transaction = Transaction(amount, category, date, description)
+    transaction = Transaction(transaction_id, amount, category, date, description)
     
     try:
         # Save the transaction to Firestore
-        doc_ref = db.collection('Transactions').document()
-        # Use auto-generated document ID
+        doc_ref = db.collection('Transactions').document(transaction_id)
+        # Use the provided document ID as the document reference
         doc_ref.set(transaction.to_dict())
         print("Transaction saved successfully.")
     except Exception as e:
         print("Failed to save transaction:", e)
         
         
-# Get Transactions
-def get_transactions():
+# Get Transaction
+def get_transaction(transaction_id):
     '''
-    Function to retrieve all transactions from the Firestore database.
+    Function to retrieve a specific transaction from the Firestore database.
     
-    :return: List of transactions
+    :param transaction_id: ID of the transaction to retrieve
+    :return: Transaction data or None if not found
     '''
     try:
-        # Retrieve all documents from the 'Transactions' collection
-        docs = db.collection('Transactions').stream()
-        # Convert documents to a list of transaction dictionaries
-        transactions = []
-        for doc in docs:
-            transaction_data = doc.to_dict()
+        # Retrieve the specific document from the 'Transactions' collection
+        doc_ref = db.collection('Transactions').document(transaction_id)
+        doc = doc_ref.get()
+        # Check if the document exists and return its data
+        if doc.exists:
             # Include the document ID in the transaction data
-            transaction_data['id'] = doc.id 
-            # Append the transaction data to the list
-            transactions.append(transaction_data)
-        return transactions
+            transaction_data = doc.to_dict()
+            transaction_data['id'] = doc.id
+            return transaction_data
+        else:
+            print(f"Transaction with ID '{transaction_id}' not found.")
+            return None
+    # Handle exceptions and print error message
     except Exception as e:
-        print("Failed to retrieve transactions:", e)
-        return []
+        print(f"Failed to retrieve transaction with ID '{transaction_id}':", e)
+        return None
 
 
 # Update Transaction
@@ -64,3 +68,19 @@ def update_transaction(transaction_id, update_data):
         print(f"Transaction '{transaction_id}' updated successfully.")
     except Exception as e:
         print(f"Failed to update transaction '{transaction_id}':", e)
+        
+
+# Delete Transaction
+def delete_transaction(transaction_id):
+    '''
+    Function to delete a transaction from the Firestore database.
+    
+    :param transaction_id: ID of the transaction to delete
+    '''
+    try:
+        # Delete the specified document from the collection
+        doc_ref = db.collection('Transactions').document(transaction_id)
+        doc_ref.delete()
+        print(f"Transaction '{transaction_id}' deleted successfully.")
+    except Exception as e:
+        print(f"Failed to delete transaction '{transaction_id}':", e)

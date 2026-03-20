@@ -6,6 +6,14 @@ from config.firebase_config import db
 
 # User Model
 class User:
+    '''
+    Model for representing a user in the application.
+    
+    Attributes:
+        user_id (str): Unique identifier for the user.
+        name (str): Name of the user.
+        email (str): Email address of the user.
+    '''
     def __init__(self, user_id, name, email):
         self.user_id = user_id
         self.name = name
