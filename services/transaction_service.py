@@ -11,6 +11,8 @@ def add_transaction(amount, category, date=None, description=None):
     :param date: date of the transaction
     :param description: Description of the transaction
     '''
+    
+    # Create a Transaction instance
     transaction = Transaction(amount, category, date, description)
     
     try:
@@ -45,3 +47,20 @@ def get_transactions():
     except Exception as e:
         print("Failed to retrieve transactions:", e)
         return []
+
+
+# Update Transaction
+def update_transaction(transaction_id, update_data):
+    '''
+    Function to update an existing transaction in the Firestore database.
+    
+    :param transaction_id: ID of the transaction to update
+    :param update_data: Dictionary containing the fields to update
+    '''
+    try:
+        # Update the specified document with new data
+        doc_ref = db.collection('Transactions').document(transaction_id)
+        doc_ref.update(update_data)
+        print(f"Transaction '{transaction_id}' updated successfully.")
+    except Exception as e:
+        print(f"Failed to update transaction '{transaction_id}':", e)

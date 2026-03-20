@@ -7,6 +7,8 @@ transaction1 = Transaction(100, "Groceries", "2025-03-20", "Bought groceries")
 transaction2 = Transaction(50, "Transport", "2025-03-19", "Bus fare")
 transaction3 = Transaction(200, "Entertainment", "2025-03-18", "Movie tickets")
 
+# 
+
 def main():
     # Example usage of the database functions
     
@@ -19,6 +21,8 @@ def main():
     transactions = get_transactions()
     print(transactions)
     
+    # Updating a transaction
+    update_transaction(transaction2, {'amount': 150})
         
 if __name__ == "__main__":    
     main()

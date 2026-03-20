@@ -5,7 +5,7 @@ from datetime import datetime
 # def test_connection():
 #     try:
 #         # Attempt to retrieve a document from Firestore
-#         doc_ref = db.collection('FinanceManagerDB').document('transaction1')
+#         doc_ref = db.collection('Transactions').document('transaction1')
 #         doc = doc_ref.set({
 #             'amount': 100,
 #             'category': 'Groceries',
