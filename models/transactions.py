@@ -22,7 +22,7 @@ class Transaction:
         date (datetime): Date and time of the transaction.
         description (str): Optional description of the transaction.
     ''' 
-    def __init__(self, transaction_id, amount, category, date=None, description=None):
+    def __init__(self, transaction_id: str, amount: float, category: str, date=None, description=None):
         self.document_id = transaction_id
         self.amount = amount
         self.category = category

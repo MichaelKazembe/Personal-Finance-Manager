@@ -27,7 +27,7 @@ def add_transaction(transaction_id, amount, category, date=None, description=Non
         
         
 # Get Transaction
-def get_transaction(transaction_id):
+def get_transaction(transaction_id: str):
     '''
     Function to retrieve a specific transaction from the Firestore database.
     
@@ -53,8 +53,28 @@ def get_transaction(transaction_id):
         return None
 
 
+# Get All Transactions
+def get_transactions():
+    '''
+    Function to retrieve all transactions from the Firestore database.
+    
+    :return: List of transaction data
+    '''
+    try:
+        # Retrieve all documents from the 'Transactions' collection
+        docs = db.collection('Transactions').stream()
+        transactions = []
+        for doc in docs:
+            transaction_data = doc.to_dict()
+            transaction_data['id'] = doc.id  # Include document ID in the data
+            transactions.append(transaction_data)
+        return transactions
+    except Exception as e:
+        print("Failed to retrieve transactions:", e)
+        return []
+
 # Update Transaction
-def update_transaction(transaction_id, update_data):
+def update_transaction(transaction_id: str, update_data: dict):
     '''
     Function to update an existing transaction in the Firestore database.
     
@@ -71,7 +91,7 @@ def update_transaction(transaction_id, update_data):
         
 
 # Delete Transaction
-def delete_transaction(transaction_id):
+def delete_transaction(transaction_id: str):
     '''
     Function to delete a transaction from the Firestore database.
     
