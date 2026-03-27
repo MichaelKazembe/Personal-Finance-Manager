@@ -6,11 +6,21 @@ from services.budget_service import BudgetService
 from utils.validators import validate_amount, validate_type, format_currency
 
 def calculate_balance(transactions):
+    '''Calculate the balance based on a list of transactions.
+    Args:        transactions (list): A list of transaction dictionaries, each containing:
+            - amount (float): The transaction amount
+            - type (str): The transaction type ("income" or "expense")
+    Returns:        float: The calculated balance (total income - total expenses)
+    '''
     income = sum(t["amount"] for t in transactions if t["type"] == "income")
     expenses = sum(t["amount"] for t in transactions if t["type"] == "expense")
     return income - expenses
 
 def add_transaction(user_id):
+    '''Add a new transaction for the user.
+    Args:
+        user_id (str): The ID of the user adding the transaction
+    '''
     try:
         amount = float(input("Amount: "))
         validate_amount(amount)
@@ -24,6 +34,9 @@ def add_transaction(user_id):
         print(f"Error: {e}")
 
 def view_transactions(user_id):
+    '''View all transactions for the user.
+    Args:        user_id (str): The ID of the user whose transactions to view
+    '''
     transactions = TransactionService.get_user_transactions(user_id)
     if not transactions:
         print("No transactions.")
@@ -33,11 +46,18 @@ def view_transactions(user_id):
         print(f"{i}. Date: {t['date']} | Type: {t['type'].title()} | Category: {t['category']} | Amount: {format_currency(t['amount'])} | Note: {t.get('note', '')}")
 
 def view_balance(user_id):
+    '''View the current balance for the user.
+    Args:        user_id (str): The ID of the user whose balance to view
+    '''
     transactions = TransactionService.get_user_transactions(user_id)
     balance = calculate_balance(transactions)
     print(f"Balance: {format_currency(balance)}")
 
 def list_transactions_with_ids(user_id):
+    '''Helper function to list transactions with their IDs for selection.
+    Args:        user_id (str): The ID of the user whose transactions to list
+    Returns:        list: A list of transaction dictionaries with their IDs
+    '''
     transactions = TransactionService.get_user_transactions(user_id)
     if not transactions:
         print("No transactions.")
@@ -48,6 +68,9 @@ def list_transactions_with_ids(user_id):
     return transactions
 
 def delete_transaction_ui(user_id):
+    '''UI for deleting a transaction.
+    Args:        user_id (str): The ID of the user whose transaction to delete
+    '''
     transactions = list_transactions_with_ids(user_id)
     if not transactions:
         return
@@ -63,6 +86,9 @@ def delete_transaction_ui(user_id):
         print(f"Error: {e}")
 
 def edit_transaction_ui(user_id):
+    '''UI for editing a transaction.
+    Args:        user_id (str): The ID of the user whose transaction to edit
+    '''
     transactions = list_transactions_with_ids(user_id)
     if not transactions:
         return
@@ -91,6 +117,9 @@ def edit_transaction_ui(user_id):
 
 
 def transactions_menu(user_id):
+    ''''Menu for managing transactions.
+    Args:        user_id (str): The ID of the user managing transactions
+    '''
     while True:
         print("\n--- Transactions ---")
         print("1. Add")
@@ -116,12 +145,18 @@ def transactions_menu(user_id):
             print("Invalid.")
 
 def add_budget(user_id):
+    ''''Add a new budget for the user.
+    Args:        user_id (str): The ID of the user adding the budget
+    '''
     category = input("Category: ")
     limit = float(input("Limit: "))
     BudgetService.create_budget(user_id, category, limit)
     print("Budget set!")
 
 def view_budgets(user_id):
+    '''View all budgets for the user.
+    Args:        user_id (str): The ID of the user whose budgets to view
+    '''
     budgets = BudgetService.get_user_budgets(user_id)
     if not budgets:
         print("No budgets.")
@@ -131,6 +166,9 @@ def view_budgets(user_id):
         print(f"{i}. Category: {b['category']} | Limit: {format_currency(b['limit'])} | ID: {b['id']}")
 
 def delete_budget_ui(user_id):
+    '''UI for deleting a budget.
+    Args:        user_id (str): The ID of the user whose budget to delete
+    '''
     budgets = BudgetService.get_user_budgets(user_id)
     if not budgets:
         print("No budgets.")
@@ -150,6 +188,9 @@ def delete_budget_ui(user_id):
         print("Error.")
 
 def edit_budget_ui(user_id):
+    ''''UI for editing a budget.
+    Args:        user_id (str): The ID of the user whose budget to edit
+    '''
     budgets = BudgetService.get_user_budgets(user_id)
     if not budgets:
         return
@@ -180,6 +221,9 @@ def edit_budget_ui(user_id):
         print(f"Error: {e}")
 
 def budgets_menu(user_id):
+    '''Menu for managing budgets.
+    Args:        user_id (str): The ID of the user managing budgets
+    '''
     while True:
         print("\n--- Budgets ---")
         print("1. Set Budget")
@@ -201,8 +245,9 @@ def budgets_menu(user_id):
         else:
             print("Invalid.")
 
-# Main application loop
 def main():
+    '''Main function to run the finance manager application.
+    '''
     print("=== Finance Manager ===")
 
     while True:
@@ -231,9 +276,15 @@ def main():
                     print("3. Logout")
                     action = input("Choose: ")
                     if action == "1":
-                        transactions_menu(user_id)
+                        try:
+                            transactions_menu(user_id)
+                        except Exception as e:
+                            print(f"Transaction error: {e}")
                     elif action == "2":
-                        budgets_menu(user_id)
+                        try:
+                            budgets_menu(user_id)
+                        except Exception as e:
+                            print(f"Budget error: {e}")
                     elif action == "3":
                         break
                     else:
@@ -244,4 +295,7 @@ def main():
             break
 
 if __name__ == "__main__":
+    '''Entry point of the application.
+    Initializes the main menu loop for user registration, login, and access to transaction and budget management.
+    '''
     main()

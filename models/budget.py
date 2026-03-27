@@ -7,7 +7,6 @@ for a specific category. It allows users to set spending limits for different
 expense categories and helps track their financial goals.
 """
 
-
 class Budget:
     """
     Budget model class representing a spending budget for a category.
@@ -23,7 +22,7 @@ class Budget:
         
         Args:
             user_id (str): The unique identifier of the user creating this budget
-            category (str): The spending category to set a budget for (e.g., "Food", "Transport")
+            category (str): The spending category to set a budget for (e.g., "Food", "Transport", "Entertainment")
             limit (float): The maximum amount allowed to spend in this category
         """
         self.user_id = user_id

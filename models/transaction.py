@@ -69,35 +69,35 @@ class Transaction:
         Format a date from various input formats to a standardized string format.
         
         Handles multiple date formats including:
-        - Firebase Firestore timestamp objects (dict with _seconds and _nanoseconds)
+        - Firebase Firestore Timestamp objects
+        - Firebase Firestore timestamp dicts (with _seconds and _nanoseconds)
         - Custom stored format (e.g., "25 Mar 2026, 14:30")
         - ISO format strings (e.g., "2026-03-25T14:30:00Z")
         
         Args:
-            date_input: The date to format. Can be:
-                - dict: Firebase Firestore timestamp with _seconds and _nanoseconds keys
-                - str: Date string in custom or ISO format
+            date_input: The date to format. Can be Timestamp, dict, or str
         
         Returns:
-            str: The formatted date string in format '%d %b %Y, %H:%M' (e.g., "25 Mar 2026, 14:30")
-                 Returns current datetime if parsing fails
+            str: The formatted date string in format '%d %b %Y, %H:%M'
         """
-        if isinstance(date_input, dict):
-            # Handle Firebase Firestore timestamp objects
+        dt = None
+        if hasattr(date_input, 'to_datetime'):
+            # Handle Firestore Timestamp object
+            dt = date_input.to_datetime()
+        elif isinstance(date_input, dict):
+            # Handle legacy Firestore timestamp dict
             if '_seconds' in date_input and '_nanoseconds' in date_input:
                 dt = datetime.fromtimestamp(date_input['_seconds'] + date_input['_nanoseconds'] / 10**9)
-            else:
-                # Fallback to current time if dict format is unexpected
-                dt = datetime.now()
         else:
+            # Handle string formats
             try:
-                # Try custom format first (from storage)
                 dt = datetime.strptime(date_input, '%d %b %Y, %H:%M')
             except ValueError:
                 try:
-                    # Handle ISO string format
                     dt = datetime.fromisoformat(date_input.replace('Z', '+00:00'))
                 except ValueError:
-                    # Fallback to current time if all parsing attempts fail
-                    dt = datetime.now()
+                    pass
+        
+        if dt is None:
+            dt = datetime.now()
         return dt.strftime('%d %b %Y, %H:%M')
