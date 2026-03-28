@@ -1,36 +1,42 @@
-'''
-Docstring for models.user
-'''
+# models/user.py
+"""
+User Model Module
 
-from config.firebase_config import db
+This module defines the User class which represents a user in the Personal
+Finance Manager application. It stores basic user information including
+identification and contact details.
+"""
 
-# User Model
+
 class User:
-    '''
-    Model for representing a user in the application.
+    """
+    User model class representing an application user.
     
     Attributes:
-        user_id (str): Unique identifier for the user.
-        name (str): Name of the user.
-        email (str): Email address of the user.
-    '''
-    def __init__(self, user_id, name, email):
+        user_id (str): The unique identifier for the user (Firebase UID)
+        email (str): The user's email address used for authentication
+    """
+    def __init__(self, user_id, email):
+        """
+        Initialize a new User instance.
+        
+        Args:
+            user_id (str): The unique identifier for the user (typically from Firebase)
+            email (str): The user's email address for authentication and communication
+        """
         self.user_id = user_id
-        self.name = name
         self.email = email
 
     def to_dict(self):
+        """
+        Convert the User object to a dictionary for storage or serialization.
+        
+        Returns:
+            dict: A dictionary containing all user attributes:
+                - user_id: The user's unique identifier
+                - email: The user's email address
+        """
         return {
-            'user_id': self.user_id,
-            'name': self.name,
-            'email': self.email
+            "user_id": self.user_id,
+            "email": self.email
         }
-
-    def save(self):
-        try:
-            # Save the user to Firestore
-            doc_ref = db.collection('Users').document(self.user_id)
-            doc_ref.set(self.to_dict())
-            print("User saved successfully.")
-        except Exception as e:
-            print("Failed to save user:", e)
