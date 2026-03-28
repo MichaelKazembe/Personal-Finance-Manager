@@ -1,33 +1,36 @@
 # Overview
 
-Personal Finance Manager
+## Personal Finance Manager
+This app allows users to track their expenses, income and budget.  Users can create an account then they can insert, modify, delete, and query their financial records such as income, expenses, and budgets.
 
-
-[Software Demo Video](http://youtube.link.goes.here)
-
+[Software Demo Video](https://youtu.be/zl9d_vnRjlw)
 # Cloud Database
 
-Google Firestore
+Google Firebase
 
-NoSQL
 
 # Development Environment
 
-{Describe the tools that you used to develop the software}
+Tools
+- Visual Studio Code
 
-{Describe the programming language that you used and any libraries.}
+Programming Language
+- Python for backend
+
+Modules
+- firebase-admin==6.2.0 for SDK 
+- pyrebase4 for Authentication
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
 
-- [Web Site Name](http://url.link.goes.here)
-- [Web Site Name](http://url.link.goes.here)
+- [Google Firebase Docs](https://firebase.google.com)
+- [Python Docs](https://docs.python.org)
 
 # Future Work
 
 {Make a list of things that you need to fix, improve, and add in the future.}
 
-- Item 1
-- Item 2
-- Item 3
+- Develop a user friendly web or Mobile frontend: currently the app used a basic console/CLI interface
+- Intergrate real-time charts for Balance trends, Expense Pie Charts and budget progress bar charts 
+- Add password hashing
